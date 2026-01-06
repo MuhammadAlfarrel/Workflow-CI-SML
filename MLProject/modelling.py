@@ -9,6 +9,7 @@ from sklearn.metrics import accuracy_score
 
 def train():
     print("=== Training MLflow Project ===")
+    run_id = os.environ.get("MLFLOW_RUN_ID")
 
     # Pastikan dataset ada
     if not os.path.exists("diabetes_clean.csv"):
@@ -25,7 +26,7 @@ def train():
 
     
 
-    with mlflow.start_run():
+    with mlflow.start_run(run_id=run_id)):
         model = RandomForestClassifier(
         n_estimators=50,
         random_state=42
@@ -40,7 +41,6 @@ def train():
             sk_model=model,
             artifact_path="model"
         )
-        model.fit(X_train, y_train)
         
         mlflow.log_metric("accuracy", acc)
 
