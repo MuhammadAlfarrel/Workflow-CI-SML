@@ -40,7 +40,10 @@ def train():
         mlflow.log_metric("accuracy", acc)
         
         # Log Model (PENTING: Folder ini yang dicari Docker nanti)
-        mlflow.sklearn.log_model(model, "model")
+        mlflow.sklearn.log_model(
+                                    sk_model=model,
+                                    name="model"
+                                )
         
         print(f"Training Selesai. Run ID: {run.info.run_id}")
         
