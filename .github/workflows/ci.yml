@@ -58,6 +58,6 @@ jobs:
 
     - name: Build & Push Docker Image
       run: |
-      IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/eksperimen_sml:latest"
-      docker build -t $IMAGE_NAME .
-      docker push $IMAGE_NAME
+        IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/eksperimen_sml:latest"
+        docker build -t $IMAGE_NAME .
+        docker push $IMAGE_NAME
