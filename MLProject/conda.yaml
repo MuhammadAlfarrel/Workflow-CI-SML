@@ -10,4 +10,4 @@ dependencies:
     - numpy
     - scikit-learn
     - dagshub
-    - protobuf<5.0.0
+    - protobuf

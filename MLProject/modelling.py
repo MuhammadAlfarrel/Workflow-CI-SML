@@ -3,20 +3,16 @@ import numpy as np
 import mlflow
 import mlflow.sklearn
 import os
-import dagshub # <--- WAJIB IMPORT INI (NEW)
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 
+# --- TIDAK PERLU SETTING URI MANUAL DI SINI ---
+# Biarkan script ini membaca otomatis dari Environment Variable
+# yang sudah diset di file ci.yml (MLFLOW_TRACKING_URI)
+
 def train():
     print("Mulai Training untuk Docker...")
-
-    # --- BAGIAN PENTING (FIX) ---
-    # Ini akan otomatis membaca Environment Variable (DAGSHUB_USERNAME & TOKEN)
-    # dan mengkonfigurasi MLflow supaya BISA upload file ke DagsHub.
-    # Ganti 'Eksperimen_SML_Alfarrel' dengan NAMA REPO DAGSHUB ANDA.
-    dagshub.init(repo_owner='USERNAME_DAGSHUB_ANDA', repo_name='Eksperimen_SML_Alfarrel', mlflow=True)
-    # ---------------------------
     
     # Cek apakah dataset ada
     if not os.path.exists("diabetes_clean.csv"):
@@ -33,7 +29,8 @@ def train():
     model = RandomForestClassifier(n_estimators=50)
     
     # Start Run
-    mlflow.set_experiment("Eksperimen_CI_Docker")
+    # Pastikan nama eksperimen ini SAMA PERSIS dengan yang ada di DagsHub
+    mlflow.set_experiment("Eksperimen_SML_Alfarrel")
     
     with mlflow.start_run() as run:
         model.fit(X_train, y_train)
@@ -42,10 +39,7 @@ def train():
         # Log Metrics
         mlflow.log_metric("accuracy", acc)
         
-        print("Sedang mengupload model ke DagsHub... (Tunggu sebentar)")
-        
-        # Log Model
-        # Karena sudah ada dagshub.init(), ini sekarang akan SUKSES upload file
+        # Log Model (PENTING: Folder ini yang dicari Docker nanti)
         mlflow.sklearn.log_model(model, "model")
         
         print(f"Training Selesai. Run ID: {run.info.run_id}")
