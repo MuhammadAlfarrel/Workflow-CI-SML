@@ -42,7 +42,7 @@ def train():
         # Log Model (PENTING: Folder ini yang dicari Docker nanti)
         mlflow.sklearn.log_model(
                                     sk_model=model,
-                                    artifact_path="model"
+                                    name="model"
                                 )
         
         print(f"Training Selesai. Run ID: {run.info.run_id}")
