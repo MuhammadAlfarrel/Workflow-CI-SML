@@ -52,7 +52,6 @@ jobs:
         echo "Downloading model for run $RUN_ID"
         mlflow artifacts download \
           -r "$RUN_ID" \
-          -a models/model \
           -d model_dir
 
 
