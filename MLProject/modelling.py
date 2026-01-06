@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import mlflow
 import mlflow.sklearn
 import os
@@ -9,6 +10,11 @@ from sklearn.metrics import accuracy_score
 def train():
     print("=== Training MLflow Project ===")
 
+    # Pastikan dataset ada
+    if not os.path.exists("diabetes_clean.csv"):
+        raise FileNotFoundError("diabetes_clean.csv tidak ditemukan")
+
+    # Load data
     df = pd.read_csv("diabetes_clean.csv")
     X = df.drop("Diabetes_binary", axis=1)
     y = df["Diabetes_binary"]
@@ -17,21 +23,29 @@ def train():
         X, y, test_size=0.2, random_state=42
     )
 
-    model = RandomForestClassifier(n_estimators=50, random_state=42)
-    model.fit(X_train, y_train)
+    
 
-    acc = accuracy_score(y_test, model.predict(X_test))
-
-    # Log metric
-    mlflow.log_metric("accuracy", acc)
-
-    # Log model → artifact_path WAJIB "model"
-    mlflow.sklearn.log_model(
-        sk_model=model,
-        artifact_path="model"
+    with mlflow.start_run():
+        model = RandomForestClassifier(
+        n_estimators=50,
+        random_state=42
     )
+        model.fit(X_train, y_train)
 
-    print("Training selesai")
+        acc = accuracy_score(y_test, model.predict(X_test))
+        mlflow.log_metric("accuracy", acc)
+
+        # PENTING: artifact_path HARUS "model"
+        mlflow.sklearn.log_model(
+            sk_model=model,
+            artifact_path="model"
+        )
+        model.fit(X_train, y_train)
+        
+        mlflow.log_metric("accuracy", acc)
+
+        print("Training selesai")
+        print(f"Accuracy: {acc}")
 
 if __name__ == "__main__":
     train()
