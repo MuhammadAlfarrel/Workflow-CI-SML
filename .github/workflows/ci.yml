@@ -59,7 +59,7 @@ jobs:
         # 3. Jalankan Perintah Sakti MLflow Build Docker
         # Perintah ini akan download model dari DagsHub dan bungkus jadi Docker
         mlflow models build-docker \
-          -m "runs:/${RUN_ID}/model" \
+          -m "runs:/$RUN_ID/models/model" \
           -n "$IMAGE_NAME" \
           --enable-mlserver
 
