@@ -28,10 +28,15 @@ jobs:
 
     - name: Training Model (Generate Run ID)
       env:
+        # Variabel standar MLflow (Biarkan ini ada)
         MLFLOW_TRACKING_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
         MLFLOW_TRACKING_PASSWORD: ${{ secrets.DAGSHUB_TOKEN }}
-
         MLFLOW_TRACKING_URI: "https://dagshub.com/${{ secrets.DAGSHUB_USERNAME }}/Eksperimen_SML_Alfarrel.mlflow"
+        
+        # --- TAMBAHAN PENTING ---
+        # Variabel ini DIBUTUHKAN oleh dagshub.init() di dalam Python
+        DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
+        DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
       run: |
         cd MLProject
         python modelling.py
