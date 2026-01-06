@@ -26,7 +26,7 @@ def train():
 
     
 
-    with mlflow.start_run(run_id=run_id)):
+    with mlflow.start_run(run_id=run_id):
         model = RandomForestClassifier(
         n_estimators=50,
         random_state=42
