@@ -33,23 +33,24 @@ def train():
     mlflow.set_experiment("Eksperimen_SML_Alfarrel")
     
     with mlflow.start_run() as run:
+        run_id = run.info.run_id
+
+        model = RandomForestClassifier(...)
         model.fit(X_train, y_train)
-        acc = accuracy_score(y_test, model.predict(X_test))
-        
-        # Log Metrics
-        mlflow.log_metric("accuracy", acc)
-        
-        # Log Model (PENTING: Folder ini yang dicari Docker nanti)
+
         mlflow.sklearn.log_model(
-                                    sk_model=model,
-                                    name="model"
-                                )
-        
-        print(f"Training Selesai. Run ID: {run.info.run_id}")
-        
-        # Simpan Run ID ke file txt
+            sk_model=model,
+            artifact_path="model",
+            input_example=input_example
+        )
+
+        accuracy = model.score(X_test, y_test)
+        mlflow.log_metric("accuracy", accuracy)
+
+        # simpan run_id
         with open("run_id.txt", "w") as f:
-            f.write(run.info.run_id)
+            f.write(run_id)
+
 
 if __name__ == "__main__":
     train()
