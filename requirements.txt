@@ -1,0 +1,7 @@
+mlflow
+mlserver
+scikit-learn
+pandas
+numpy
+dagshub
+protobuf<5
